@@ -7,7 +7,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmoRecog.Android", "EmoReco
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmoRecog.iOS", "EmoRecog\EmoRecog.iOS\EmoRecog.iOS.csproj", "{74F79B85-CF7C-42D2-A54B-D1C366E1EBBF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmoRecog", "EmoRecog\EmoRecog\EmoRecog.csproj", "{7F774381-9011-45BD-A22E-A999443CA418}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmoRecog", "EmoRecog\EmoRecog\EmoRecog.csproj", "{7F774381-9011-45BD-A22E-A999443CA418}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmoRecogServer", "EmoRecogServer\EmoRecogServer.csproj", "{3755206F-BDAC-404F-8860-B344989E8E86}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -133,6 +135,30 @@ Global
 		{7F774381-9011-45BD-A22E-A999443CA418}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
 		{7F774381-9011-45BD-A22E-A999443CA418}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
 		{7F774381-9011-45BD-A22E-A999443CA418}.Release|iPhoneSimulator.Deploy.0 = Release|Any CPU
+		{3755206F-BDAC-404F-8860-B344989E8E86}.Ad-Hoc|Any CPU.ActiveCfg = Release|Any CPU
+		{3755206F-BDAC-404F-8860-B344989E8E86}.Ad-Hoc|Any CPU.Build.0 = Release|Any CPU
+		{3755206F-BDAC-404F-8860-B344989E8E86}.Ad-Hoc|iPhone.ActiveCfg = Release|Any CPU
+		{3755206F-BDAC-404F-8860-B344989E8E86}.Ad-Hoc|iPhone.Build.0 = Release|Any CPU
+		{3755206F-BDAC-404F-8860-B344989E8E86}.Ad-Hoc|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{3755206F-BDAC-404F-8860-B344989E8E86}.Ad-Hoc|iPhoneSimulator.Build.0 = Release|Any CPU
+		{3755206F-BDAC-404F-8860-B344989E8E86}.AppStore|Any CPU.ActiveCfg = Release|Any CPU
+		{3755206F-BDAC-404F-8860-B344989E8E86}.AppStore|Any CPU.Build.0 = Release|Any CPU
+		{3755206F-BDAC-404F-8860-B344989E8E86}.AppStore|iPhone.ActiveCfg = Release|Any CPU
+		{3755206F-BDAC-404F-8860-B344989E8E86}.AppStore|iPhone.Build.0 = Release|Any CPU
+		{3755206F-BDAC-404F-8860-B344989E8E86}.AppStore|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{3755206F-BDAC-404F-8860-B344989E8E86}.AppStore|iPhoneSimulator.Build.0 = Release|Any CPU
+		{3755206F-BDAC-404F-8860-B344989E8E86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3755206F-BDAC-404F-8860-B344989E8E86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3755206F-BDAC-404F-8860-B344989E8E86}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{3755206F-BDAC-404F-8860-B344989E8E86}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{3755206F-BDAC-404F-8860-B344989E8E86}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{3755206F-BDAC-404F-8860-B344989E8E86}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{3755206F-BDAC-404F-8860-B344989E8E86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3755206F-BDAC-404F-8860-B344989E8E86}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3755206F-BDAC-404F-8860-B344989E8E86}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{3755206F-BDAC-404F-8860-B344989E8E86}.Release|iPhone.Build.0 = Release|Any CPU
+		{3755206F-BDAC-404F-8860-B344989E8E86}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{3755206F-BDAC-404F-8860-B344989E8E86}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
