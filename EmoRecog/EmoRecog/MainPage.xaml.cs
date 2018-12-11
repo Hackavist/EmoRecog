@@ -104,7 +104,8 @@ namespace EmoRecog
             };
             connect.Clicked += async (sender, args) =>
             {
-                await Networking.Connect();
+                string msg = await Networking.Connect();
+                await DisplayAlert("Connected to", msg, "OK");
             };
         }
     }
