@@ -34,6 +34,7 @@ namespace EmoRecogServer
                         return;
                     }
                 }
+                Thread.Sleep(1000);
             }
         }
         static void Worker(object o)
@@ -54,8 +55,9 @@ namespace EmoRecogServer
                 Console.WriteLine("** Failed to initalize TCP Socket, Reason : " + e.Message);
                 return;
             }
-            Console.WriteLine("-> TCP Socket initalized successfully, listening to 100 connections and is bound to port " + ((IPEndPoint)TCPSocket.LocalEndPoint).Port);
-            Console.WriteLine("## Enabling BroadCast in UDP Socket");
+            Console.WriteLine("-> TCP Socket initalized successfully, listening to 100 connections and is bound to port " 
+                              + ((IPEndPoint)TCPSocket.LocalEndPoint).Port);
+            Console.WriteLine("## Enabling Broadcast in UDP Socket");
             UDPSocket.EnableBroadcast = true;
             Console.WriteLine("## Creating announce thread");
             AnnoucerThread = new Thread(new ThreadStart(Announcer));
@@ -63,12 +65,12 @@ namespace EmoRecogServer
             Console.WriteLine("## Waiting for connections");
             while(true)
             {
-                Thread t = new Thread(new ParameterizedThreadStart(Worker));
                 Socket s = TCPSocket.Accept();
                 lock(ConsoleLock)
                 {
                     Console.WriteLine("-> " + ((IPEndPoint)s.RemoteEndPoint).Address.ToString() + " is connected");
                 }
+                Thread t = new Thread(new ParameterizedThreadStart(Worker));
                 t.Start(s);
                 lock(WorkerThreads)
                 {
