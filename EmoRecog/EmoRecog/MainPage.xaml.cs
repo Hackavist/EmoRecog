@@ -36,7 +36,6 @@ namespace EmoRecog
                     return stream;
                 });
             };
-
             takeVideo.Clicked += async (sender, args) =>
             {
                 if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakeVideoSupported)
