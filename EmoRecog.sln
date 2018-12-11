@@ -4,18 +4,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 15.0.28307.136
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmoRecog.Android", "EmoRecog\EmoRecog.Android\EmoRecog.Android.csproj", "{8497039C-6EC1-4C1C-AA74-1A1E4E84A927}"
-	ProjectSection(ProjectDependencies) = postProject
-		{3755206F-BDAC-404F-8860-B344989E8E86} = {3755206F-BDAC-404F-8860-B344989E8E86}
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmoRecog.iOS", "EmoRecog\EmoRecog.iOS\EmoRecog.iOS.csproj", "{74F79B85-CF7C-42D2-A54B-D1C366E1EBBF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmoRecog", "EmoRecog\EmoRecog\EmoRecog.csproj", "{7F774381-9011-45BD-A22E-A999443CA418}"
-	ProjectSection(ProjectDependencies) = postProject
-		{3755206F-BDAC-404F-8860-B344989E8E86} = {3755206F-BDAC-404F-8860-B344989E8E86}
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmoRecogServer", "EmoRecogServer\EmoRecogServer.csproj", "{3755206F-BDAC-404F-8860-B344989E8E86}"
+	ProjectSection(ProjectDependencies) = postProject
+		{7F774381-9011-45BD-A22E-A999443CA418} = {7F774381-9011-45BD-A22E-A999443CA418}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
