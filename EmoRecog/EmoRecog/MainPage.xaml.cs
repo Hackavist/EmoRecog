@@ -42,30 +42,30 @@ namespace EmoRecog
                 });
             };
 
-            //pickPhoto.Clicked += async (sender, args) =>
-            //{
-            //    if (!CrossMedia.Current.IsPickPhotoSupported)
-            //    {
-            //        await DisplayAlert("Photos Not Supported", ":( Permission not granted to photos.", "OK");
-            //        return;
-            //    }
-            //    var file = await Plugin.Media.CrossMedia.Current.PickPhotoAsync(new Plugin.Media.Abstractions.PickMediaOptions
-            //    {
-            //        PhotoSize = Plugin.Media.Abstractions.PhotoSize.Medium,
+            pickPhoto.Clicked += async (sender, args) =>
+            {
+                if (!CrossMedia.Current.IsPickPhotoSupported)
+                {
+                    await DisplayAlert("Photos Not Supported", ":( Permission not granted to photos.", "OK");
+                    return;
+                }
+                var file = await Plugin.Media.CrossMedia.Current.PickPhotoAsync(new Plugin.Media.Abstractions.PickMediaOptions
+                {
+                    PhotoSize = Plugin.Media.Abstractions.PhotoSize.Medium,
 
-            //    });
+                });
 
 
-            //    if (file == null)
-            //        return;
+                if (file == null)
+                    return;
 
-            //    image.Source = ImageSource.FromStream(() =>
-            //    {
-            //        var stream = file.GetStream();
-            //        file.Dispose();
-            //        return stream;
-            //    });
-            //};
+                image.Source = ImageSource.FromStream(() =>
+                {
+                    var stream = file.GetStream();
+                    file.Dispose();
+                    return stream;
+                });
+            };
 
             takeVideo.Clicked += async (sender, args) =>
             {
@@ -89,21 +89,21 @@ namespace EmoRecog
                 file.Dispose();
             };
 
-            //pickVideo.Clicked += async (sender, args) =>
-            //{
-            //    if (!CrossMedia.Current.IsPickVideoSupported)
-            //    {
-            //        await DisplayAlert("Videos Not Supported", ":( Permission not granted to videos.", "OK");
-            //        return;
-            //    }
-            //    var file = await CrossMedia.Current.PickVideoAsync();
+            pickVideo.Clicked += async (sender, args) =>
+            {
+                if (!CrossMedia.Current.IsPickVideoSupported)
+                {
+                    await DisplayAlert("Videos Not Supported", ":( Permission not granted to videos.", "OK");
+                    return;
+                }
+                var file = await CrossMedia.Current.PickVideoAsync();
 
-            //    if (file == null)
-            //        return;
+                if (file == null)
+                    return;
 
-            //    await DisplayAlert("Video Selected", "Location: " + file.Path, "OK");
-            //    file.Dispose();
-            //};
+                await DisplayAlert("Video Selected", "Location: " + file.Path, "OK");
+                file.Dispose();
+            };
         }
     }
 }
