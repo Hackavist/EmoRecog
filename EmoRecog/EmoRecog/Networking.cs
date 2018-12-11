@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
@@ -8,10 +9,19 @@ namespace EmoRecog
     static class Networking
     {
         static Socket TCPSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        static public async Task SendPhoto(byte[] Photo)
+        {
+            if(!TCPSocket.Connected)
+            {
+                throw new Exception("Not connected to server");
+            }
+            TCPSocket.Send(new byte[] { 1 });
+            await Task.Run(() => TCPSocket.Send(Photo));
+        }
         static public async Task<string> Connect()
         {
             Socket UDPSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-            EndPoint endPoint = new IPEndPoint(IPAddress.Any, 0);
+            EndPoint endPoint = new IPEndPoint(IPAddress.Any, 6969);
             UDPSocket.EnableBroadcast = true;
             UDPSocket.Bind(endPoint);
             byte[] Message = new byte[1024];
