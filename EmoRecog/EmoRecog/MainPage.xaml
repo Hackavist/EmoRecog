@@ -10,6 +10,7 @@
             <Button x:Name="pickPhoto" Text="Pick Photo"/>
             <Button x:Name="takeVideo" Text="Take Video"/>
             <Button x:Name="pickVideo" Text="Pick Video"/>
+            <Button x:Name="connect"   Text="Connect"/>
             <Image x:Name="image"/>
         </StackLayout>
     </ScrollView>
