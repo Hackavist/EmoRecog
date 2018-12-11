@@ -18,7 +18,7 @@ namespace EmoRecog
                     return;
                 }
 
-                var file = await CrossMedia.Current.TakePhotoAsync(new Plugin.Media.Abstractions.StoreCameraMediaOptions
+                var file = await CrossMedia.Current.TakePhotoAsync(new StoreCameraMediaOptions
                 {
                     Directory = "Test",
                     SaveToAlbum = true,
@@ -49,12 +49,10 @@ namespace EmoRecog
                     await DisplayAlert("Photos Not Supported", ":( Permission not granted to photos.", "OK");
                     return;
                 }
-                var file = await Plugin.Media.CrossMedia.Current.PickPhotoAsync(new Plugin.Media.Abstractions.PickMediaOptions
+                var file = await CrossMedia.Current.PickPhotoAsync(new PickMediaOptions
                 {
-                    PhotoSize = Plugin.Media.Abstractions.PhotoSize.Medium,
-
+                    PhotoSize = PhotoSize.Medium,
                 });
-
 
                 if (file == null)
                     return;
@@ -74,11 +72,11 @@ namespace EmoRecog
                     await DisplayAlert("No Camera", ":( No camera avaialble.", "OK");
                     return;
                 }
-
-                var file = await CrossMedia.Current.TakeVideoAsync(new Plugin.Media.Abstractions.StoreVideoOptions
+                var file = await CrossMedia.Current.TakeVideoAsync(new StoreVideoOptions
                 {
                     Name = "video.mp4",
-                    Directory = "DefaultVideos",
+                    Directory = "DefaultVideos"
+
                 });
 
                 if (file == null)
@@ -103,6 +101,10 @@ namespace EmoRecog
 
                 await DisplayAlert("Video Selected", "Location: " + file.Path, "OK");
                 file.Dispose();
+            };
+            connect.Clicked += async (sender, args) =>
+            {
+                await Networking.Connect();
             };
         }
     }
