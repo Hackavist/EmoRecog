@@ -4,14 +4,5 @@
              xmlns:local="clr-namespace:EmoRecog"
              x:Class="EmoRecog.MainPage" Padding="10,25,10,10">
 
-    <ScrollView>
-        <StackLayout Spacing="10" Padding="10">
-            <Button x:Name="takePhoto" Text="Take Photo"/>
-            <Button x:Name="pickPhoto" Text="Pick Photo"/>
-            <Button x:Name="takeVideo" Text="Take Video"/>
-            <Button x:Name="pickVideo" Text="Pick Video"/>
-            <Button x:Name="connect"   Text="Connect"/>
-            <Image x:Name="image"/>
-        </StackLayout>
-    </ScrollView>
+
 </ContentPage>
