@@ -66,7 +66,6 @@ namespace EmoRecog
                     return stream;
                 });
             };
-
             takeVideo.Clicked += async (sender, args) =>
             {
                 if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakeVideoSupported)
@@ -74,7 +73,6 @@ namespace EmoRecog
                     await DisplayAlert("No Camera", ":( No camera avaialble.", "OK");
                     return;
                 }
-
                 var file = await CrossMedia.Current.TakeVideoAsync(new Plugin.Media.Abstractions.StoreVideoOptions
                 {
                     Name = "video.mp4",
