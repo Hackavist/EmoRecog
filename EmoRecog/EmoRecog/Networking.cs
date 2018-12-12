@@ -17,22 +17,13 @@ namespace EmoRecog
             {
                 throw new Exception("Not connected to server");
             }
-            byte[] buffer = new byte[1024];
             //Mode: 1 for photo 
             TCPSocket.Send(new byte[] { 1 });
             //Length of file
             TCPSocket.Send(BitConverter.GetBytes((int)PhotoStream.Length));
-            //Chunk size
-            TCPSocket.Send(BitConverter.GetBytes((int)1024));
-            await Task.Run(() =>
-            {
-                int len = (int)PhotoStream.Length;
-                for (int i = 0; i < len; i += 1024)
-                {
-                    PhotoStream.Read(buffer, 0, (int)Math.Min(1024, PhotoStream.Length - i));
-                    TCPSocket.Send(buffer);
-                }
-            });
+            byte[] buffer = new byte[PhotoStream.Length];
+            PhotoStream.Read(buffer, 0, (int)PhotoStream.Length);
+            await Task.Run(() => TCPSocket.Send(buffer));
         }
         static public async Task<string> Connect()
         {
