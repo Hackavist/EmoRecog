@@ -2,14 +2,135 @@
 using Plugin.Media.Abstractions;
 using Xamarin.Forms;
 using System.Threading.Tasks;
+using Acr.UserDialogs;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace EmoRecog.ViewModels
 {
-    class HomeViewModel
+    public class HomeViewModel
     {
+        public Command TakePhotoCMD { get; set; }
+        public Command PickPhotoCMD { get; set; }
+        public Command TakeVideoCMD { get; set; }
+        public Command PickVideoCMD { get; set; }
+        public Command ConnectCMD { get; set; }
+        public ImageSource imageSource { get; set; }
+        public AlertConfig alert { get; set; }
 
+        public HomeViewModel()
+        {
+            TakePhotoCMD = new Command(async () => await TakeAPhoto());
+            PickPhotoCMD = new Command(async () => await PickPhoto());
+            TakeVideoCMD = new Command(async () => await TakeAVideo());
+            PickVideoCMD = new Command(async () => await PickAVideo());
+            ConnectCMD = new Command(async () => await Connect());
+            alert = new AlertConfig();
+        }
+
+        private async Task Connect()
+        {
+            string msg = await Networking.Connect();
+            alert.Title = "Connected To";
+            alert.Message = msg;
+            UserDialogs.Instance.Alert(alert);
+        }
+
+        private async Task PickAVideo()
+        {
+            if (!CrossMedia.Current.IsPickVideoSupported)
+            {
+                alert.Title = "No VIDEOS Not Supported";
+                alert.Message = ":( Permission not granted to VIDEOS.";
+                UserDialogs.Instance.Alert(alert);
+                return;
+            }
+            var file = await CrossMedia.Current.PickVideoAsync();
+
+            if (file == null)
+                return;
+
+            alert.Title = "Video Selected";
+            alert.Message = "Location: " + file.Path;
+            UserDialogs.Instance.Alert(alert);
+            file.Dispose();
+        }
+        private async Task TakeAVideo()
+        {
+            if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakeVideoSupported)
+            {
+                alert.Title = "No Camera";
+                alert.Message = ":( No camera available.";
+                UserDialogs.Instance.Alert(alert);
+                return;
+            }
+
+            var file = await CrossMedia.Current.TakeVideoAsync(new StoreVideoOptions
+            {
+                Name = "video.mp4",
+                Directory = "DefaultVideos",
+                Quality = VideoQuality.High
+            });
+
+            if (file == null)
+                return;
+            file.Dispose();
+        }
+        private async Task PickPhoto()
+        {
+            if (!CrossMedia.Current.IsPickPhotoSupported)
+            {
+                alert.Title = "No Photos Not Supporte";
+                alert.Message = ":( Permission not granted to photos.";
+                UserDialogs.Instance.Alert(alert);
+                return;
+            }
+            var file = await CrossMedia.Current.PickPhotoAsync(new PickMediaOptions
+            {
+                PhotoSize = PhotoSize.Medium,
+
+            });
+
+
+            if (file == null)
+                return;
+
+            imageSource = ImageSource.FromStream(() =>
+            {
+                var stream = file.GetStream();
+                file.Dispose();
+                return stream;
+            });
+        }
+        private async Task TakeAPhoto()
+        {
+            if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakePhotoSupported)
+            {
+                alert.Title = "No Camera";
+                alert.Message = ":( No camera available.";
+                UserDialogs.Instance.Alert(alert);
+                return;
+            }
+
+            var file = await CrossMedia.Current.TakePhotoAsync(new Plugin.Media.Abstractions.StoreCameraMediaOptions
+            {
+                Directory = "Test",
+                SaveToAlbum = true,
+                CustomPhotoSize = 50,
+                PhotoSize = PhotoSize.MaxWidthHeight,
+                MaxWidthHeight = 2000,
+                DefaultCamera = CameraDevice.Front
+            });
+
+            if (file == null)
+                return;
+            imageSource = ImageSource.FromStream(() =>
+            {
+                var stream = file.GetStream();
+                file.Dispose();
+                return stream;
+            });
+        }
     }
 }
