@@ -4,6 +4,7 @@ using System.Text;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using System.IO;
 
 namespace EmoRecogServer
 {
@@ -39,9 +40,9 @@ namespace EmoRecogServer
         {
             Socket s = (Socket)o;
             string remoteip = ((IPEndPoint)s.RemoteEndPoint).Address.ToString();
-            byte[] message = new byte[10000000];
             while (s.Connected)
             {
+                byte[] message = new byte[1024];
                 int n = 0;
                 try
                 {
@@ -55,12 +56,34 @@ namespace EmoRecogServer
                 switch (message[0])
                 {
                     case 1:
-                        n = s.Receive(message);
-                        lock (ConsoleLock)
                         {
-                            Console.WriteLine(remoteip + ": received a " + n + " bytes photo");
+                            s.Receive(message);
+                            int PhotoSize = BitConverter.ToInt32(message, 0);
+                            s.Receive(message);
+                            int ChunkSize = BitConverter.ToInt32(message, 0);
+                            message = new byte[ChunkSize];
+                            List<byte> Photo = new List<byte>();
+                            for (int i = 0; i < PhotoSize; i += ChunkSize)
+                            {
+                                int SegmentSize = s.Receive(message);
+                                if (PhotoSize - i < ChunkSize)
+                                {
+                                    byte[] Segment = new byte[SegmentSize];
+                                    Array.Copy(message, Segment, SegmentSize);
+                                    Photo.AddRange(Segment);
+                                }
+                                else
+                                {
+                                    Photo.AddRange(message);
+                                }
+                            }
+                            lock (ConsoleLock)
+                            {
+                                Console.WriteLine(remoteip + ": received a " + PhotoSize + " bytes photo");
+                            }
+                            File.WriteAllBytes("image.jpg", Photo.ToArray());
+                            //Image processing goes here
                         }
-                        //Image processing goes here
                         break;
                     default:
                         Terminate = true;
@@ -70,7 +93,7 @@ namespace EmoRecogServer
                         }
                         break;
                 }
-                if(Terminate)
+                if (Terminate)
                 {
                     break;
                 }

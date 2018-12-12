@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Text;
 using System.Net;
 using System.Net.Sockets;
@@ -9,14 +10,27 @@ namespace EmoRecog
     static class Networking
     {
         static Socket TCPSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-        static public async Task SendPhoto(byte[] Photo)
+        static public async Task SendPhoto(Stream PhotoStream)
         {
             if(!TCPSocket.Connected)
             {
                 throw new Exception("Not connected to server");
             }
+            byte[] buffer = new byte[1024];
+            //Mode: 1 for photo 
             TCPSocket.Send(new byte[] { 1 });
-            await Task.Run(() => TCPSocket.Send(Photo));
+            //Length of file
+            TCPSocket.Send(BitConverter.GetBytes((int)PhotoStream.Length));
+            //Chunk size
+            TCPSocket.Send(BitConverter.GetBytes(1024));
+            await Task.Run(() =>
+            {
+                for (int i = 0; i < PhotoStream.Length; i += 1024)
+                {
+                    PhotoStream.Read(buffer, i, (int)Math.Min(1024, PhotoStream.Length - i));
+                    TCPSocket.Send(buffer);
+                }
+            });
         }
         static public async Task<string> Connect()
         {
