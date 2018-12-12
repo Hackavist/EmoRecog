@@ -57,25 +57,21 @@ namespace EmoRecogServer
                 {
                     case 1:
                         {
-                            s.Receive(message);
+                            n = s.Receive(message, 4, SocketFlags.None);
                             int PhotoSize = BitConverter.ToInt32(message, 0);
-                            s.Receive(message);
+                            n = s.Receive(message, 4, SocketFlags.None);
                             int ChunkSize = BitConverter.ToInt32(message, 0);
                             message = new byte[ChunkSize];
                             List<byte> Photo = new List<byte>();
-                            for (int i = 0; i < PhotoSize; i += ChunkSize)
+                            int i = 0;
+                            while(i < PhotoSize)
                             {
                                 int SegmentSize = s.Receive(message);
-                                if (PhotoSize - i < ChunkSize)
+                                for(int j = 0; j < SegmentSize; j++)
                                 {
-                                    byte[] Segment = new byte[SegmentSize];
-                                    Array.Copy(message, Segment, SegmentSize);
-                                    Photo.AddRange(Segment);
+                                    Photo.Add(message[j]);
                                 }
-                                else
-                                {
-                                    Photo.AddRange(message);
-                                }
+                                i += SegmentSize;
                             }
                             lock (ConsoleLock)
                             {
