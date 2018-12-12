@@ -51,5 +51,10 @@ namespace EmoRecog
             });
             return ((IPEndPoint)TCPSocket.RemoteEndPoint).ToString();
         }
+
+        internal static Task SendPhoto(Func<Stream> p)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

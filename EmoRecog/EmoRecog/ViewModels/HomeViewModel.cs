@@ -22,8 +22,6 @@ namespace EmoRecog.ViewModels
         public Command SendCMD { get; set; }
         public ImageSource imageSource { get; set; }
         public AlertConfig alert { get; set; }
-        public Stream TransactionStream { get; set; }
-
         public HomeViewModel()
         {
             TakePhotoCMD = new Command(async () => await TakeAPhoto());
@@ -36,17 +34,7 @@ namespace EmoRecog.ViewModels
         }
 
         private async Task Send()
-        {
-            UserDialogs.Instance.ShowLoading();
-            await Task.Run(async () =>
-            {
-                await Networking.SendPhoto(TransactionStream);
-
-                UserDialogs.Instance.HideLoading();
-            });
-            alert.Title = "Hey Abdo";
-            alert.Message = "Taban lak Sent";
-            UserDialogs.Instance.Alert(alert);
+        {// taban
         }
 
         #region INotifyPropertyChanged Implementation
@@ -85,8 +73,7 @@ namespace EmoRecog.ViewModels
 
             if (file == null)
                 return;
-            TransactionStream = file.GetStream();
-
+             file.GetStream();
             alert.Title = "Video Selected";
             alert.Message = "Location: " + file.Path;
             UserDialogs.Instance.Alert(alert);
@@ -112,7 +99,7 @@ namespace EmoRecog.ViewModels
             if (file == null)
                 return;
 
-            TransactionStream = file.GetStream();
+          // TransactionStream = file.GetStream();
 
             alert.Title = "Video Recoreded and Selected";
             alert.Message = "Location: " + file.Path;
@@ -140,7 +127,6 @@ namespace EmoRecog.ViewModels
             imageSource = ImageSource.FromStream(() =>
             {
                 var stream = file.GetStream();
-                TransactionStream = stream;
                 file.Dispose();
                 return stream;
             });
@@ -168,20 +154,22 @@ namespace EmoRecog.ViewModels
 
             if (file == null)
                 return;
-
-            TransactionStream = file.GetStream();
+            imageSource = ImageSource.FromStream(() =>
+            {
+                var stream = file.GetStream();
+                file.Dispose();
+                return stream;
+            });
+            OnPropertyChanged(nameof(imageSource));
             UserDialogs.Instance.ShowLoading();
             await Task.Run(async () =>
             {
-                await Networking.SendPhoto(TransactionStream);
+                await Networking.SendPhoto(file.GetStream());
                 UserDialogs.Instance.HideLoading();
                 alert.Title = "HeyThe";
                 alert.Message = "The Photo has been Sent";
                 UserDialogs.Instance.Alert(alert);
             });
-            imageSource = ImageSource.FromStream(() => { return TransactionStream; });
-            file.Dispose();
-            OnPropertyChanged(nameof(imageSource));
         }
     }
 }
