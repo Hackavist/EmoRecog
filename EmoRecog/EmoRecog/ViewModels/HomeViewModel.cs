@@ -6,18 +6,23 @@ using Acr.UserDialogs;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.IO;
 
 namespace EmoRecog.ViewModels
 {
-    public class HomeViewModel
+    public class HomeViewModel : INotifyPropertyChanged
     {
         public Command TakePhotoCMD { get; set; }
         public Command PickPhotoCMD { get; set; }
         public Command TakeVideoCMD { get; set; }
         public Command PickVideoCMD { get; set; }
         public Command ConnectCMD { get; set; }
+        public Command SendCMD { get; set; }
         public ImageSource imageSource { get; set; }
         public AlertConfig alert { get; set; }
+        public Stream TransactionStream  { get; set; }
 
         public HomeViewModel()
         {
@@ -26,8 +31,36 @@ namespace EmoRecog.ViewModels
             TakeVideoCMD = new Command(async () => await TakeAVideo());
             PickVideoCMD = new Command(async () => await PickAVideo());
             ConnectCMD = new Command(async () => await Connect());
+            SendCMD = new Command(async () => await Send());
             alert = new AlertConfig();
         }
+
+        private async Task Send()
+        {
+            UserDialogs.Instance.ShowLoading();
+            await Task.Run(async () =>
+            {
+                await Networking.SendPhoto(TransactionStream);
+
+                UserDialogs.Instance.HideLoading();
+            });
+            alert.Title = "Hey Abdo";
+            alert.Message = "Taban lak Sent";
+            UserDialogs.Instance.Alert(alert);
+        }
+
+        #region INotifyPropertyChanged Implementation
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public virtual void OnPropertyChanged([CallerMemberName] string propertyName = "")
+        {
+            if (PropertyChanged == null)
+                return;
+
+            PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+        #endregion INotifyPropertyChanged Implementation
 
         private async Task Connect()
         {
@@ -36,6 +69,8 @@ namespace EmoRecog.ViewModels
             alert.Message = msg;
             UserDialogs.Instance.Alert(alert);
         }
+
+
 
         private async Task PickAVideo()
         {
@@ -50,6 +85,7 @@ namespace EmoRecog.ViewModels
 
             if (file == null)
                 return;
+            TransactionStream = file.GetStream();
 
             alert.Title = "Video Selected";
             alert.Message = "Location: " + file.Path;
@@ -75,6 +111,12 @@ namespace EmoRecog.ViewModels
 
             if (file == null)
                 return;
+
+            TransactionStream = file.GetStream();
+
+            alert.Title = "Video Recoreded and Selected";
+            alert.Message = "Location: " + file.Path;
+            UserDialogs.Instance.Alert(alert);
             file.Dispose();
         }
         private async Task PickPhoto()
@@ -89,7 +131,6 @@ namespace EmoRecog.ViewModels
             var file = await CrossMedia.Current.PickPhotoAsync(new PickMediaOptions
             {
                 PhotoSize = PhotoSize.Medium,
-
             });
 
 
@@ -99,9 +140,11 @@ namespace EmoRecog.ViewModels
             imageSource = ImageSource.FromStream(() =>
             {
                 var stream = file.GetStream();
+                TransactionStream = stream;
                 file.Dispose();
                 return stream;
             });
+            OnPropertyChanged(nameof(imageSource));
         }
         private async Task TakeAPhoto()
         {
@@ -125,12 +168,27 @@ namespace EmoRecog.ViewModels
 
             if (file == null)
                 return;
-            imageSource = ImageSource.FromStream(() =>
+
+            var stream = file.GetStream();
+            TransactionStream = stream;
+            UserDialogs.Instance.ShowLoading();
+            await Task.Run(async () =>
             {
-                var stream = file.GetStream();
-                file.Dispose();
-                return stream;
+                await Networking.SendPhoto(TransactionStream);
+
+                UserDialogs.Instance.HideLoading(); 
+                alert.Title = "Hey Abdo";
+                alert.Message = "Taban lak Sent sent";
+                UserDialogs.Instance.Alert(alert);
+                imageSource = ImageSource.FromStream(() => { return TransactionStream; });
+                OnPropertyChanged(nameof(imageSource));
             });
+            //alert.Title = "Hey Abdo";
+            //alert.Message = "taban lak Sent bara";
+            //UserDialogs.Instance.Alert(alert);
+            //imageSource = ImageSource.FromStream(() => { return TransactionStream; });
+            //file.Dispose();
+            //OnPropertyChanged(nameof(imageSource));
         }
     }
 }

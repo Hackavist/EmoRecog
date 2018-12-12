@@ -4,6 +4,7 @@ using System.Text;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
+using Acr.UserDialogs;
 
 namespace EmoRecog
 {
@@ -12,7 +13,7 @@ namespace EmoRecog
         static Socket TCPSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         static public async Task SendPhoto(Stream PhotoStream)
         {
-            if(!TCPSocket.Connected)
+            if (!TCPSocket.Connected)
             {
                 throw new Exception("Not connected to server");
             }
@@ -22,12 +23,13 @@ namespace EmoRecog
             //Length of file
             TCPSocket.Send(BitConverter.GetBytes((int)PhotoStream.Length));
             //Chunk size
-            TCPSocket.Send(BitConverter.GetBytes(1024));
+            TCPSocket.Send(BitConverter.GetBytes((int)1024));
             await Task.Run(() =>
             {
-                for (int i = 0; i < PhotoStream.Length; i += 1024)
+                int len = (int)PhotoStream.Length;
+                for (int i = 0; i < len; i += 1024)
                 {
-                    PhotoStream.Read(buffer, i, (int)Math.Min(1024, PhotoStream.Length - i));
+                    PhotoStream.Read(buffer, 0, (int)Math.Min(1024, PhotoStream.Length - i));
                     TCPSocket.Send(buffer);
                 }
             });
@@ -49,7 +51,7 @@ namespace EmoRecog
                     {
                         int port = int.Parse(s.Substring(s.IndexOf(':') + 1).Trim());
                         TCPSocket.Connect(new IPEndPoint(((IPEndPoint)endPoint).Address, port));
-                        if(TCPSocket.Connected)
+                        if (TCPSocket.Connected)
                         {
                             break;
                         }
