@@ -46,7 +46,7 @@ namespace EmoRecogServer
                 int n = 0;
                 try
                 {
-                    n = s.Receive(message);
+                    n = s.Receive(message, 1, SocketFlags.None);
                 }
                 catch (Exception)
                 {
@@ -57,16 +57,19 @@ namespace EmoRecogServer
                 {
                     case 1:
                         {
-                            n = s.Receive(message, 4, SocketFlags.None);
+                            s.Receive(message, 4, SocketFlags.None);
                             int PhotoSize = BitConverter.ToInt32(message, 0);
-                            n = s.Receive(message, 4, SocketFlags.None);
-                            int ChunkSize = BitConverter.ToInt32(message, 0);
-                            message = new byte[ChunkSize];
-                            List<byte> Photo = new List<byte>();
+                            message = new byte[PhotoSize];
+                            List<byte> Photo = new List<byte>(PhotoSize);
                             int i = 0;
                             while(i < PhotoSize)
                             {
                                 int SegmentSize = s.Receive(message);
+                                if(SegmentSize == 0)
+                                {
+                                    Terminate = true;
+                                    break;
+                                }
                                 for(int j = 0; j < SegmentSize; j++)
                                 {
                                     Photo.Add(message[j]);
