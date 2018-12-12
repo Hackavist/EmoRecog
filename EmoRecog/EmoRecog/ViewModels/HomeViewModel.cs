@@ -22,7 +22,7 @@ namespace EmoRecog.ViewModels
         public Command SendCMD { get; set; }
         public ImageSource imageSource { get; set; }
         public AlertConfig alert { get; set; }
-        public Stream TransactionStream  { get; set; }
+        public Stream TransactionStream { get; set; }
 
         public HomeViewModel()
         {
@@ -169,26 +169,19 @@ namespace EmoRecog.ViewModels
             if (file == null)
                 return;
 
-            var stream = file.GetStream();
-            TransactionStream = stream;
+            TransactionStream = file.GetStream();
             UserDialogs.Instance.ShowLoading();
             await Task.Run(async () =>
             {
                 await Networking.SendPhoto(TransactionStream);
-
-                UserDialogs.Instance.HideLoading(); 
-                alert.Title = "Hey Abdo";
-                alert.Message = "Taban lak Sent sent";
+                UserDialogs.Instance.HideLoading();
+                alert.Title = "HeyThe";
+                alert.Message = "The Photo has been Sent";
                 UserDialogs.Instance.Alert(alert);
-                imageSource = ImageSource.FromStream(() => { return TransactionStream; });
-                OnPropertyChanged(nameof(imageSource));
             });
-            //alert.Title = "Hey Abdo";
-            //alert.Message = "taban lak Sent bara";
-            //UserDialogs.Instance.Alert(alert);
-            //imageSource = ImageSource.FromStream(() => { return TransactionStream; });
-            //file.Dispose();
-            //OnPropertyChanged(nameof(imageSource));
+            imageSource = ImageSource.FromStream(() => { return TransactionStream; });
+            file.Dispose();
+            OnPropertyChanged(nameof(imageSource));
         }
     }
 }
